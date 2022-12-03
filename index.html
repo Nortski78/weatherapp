@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="index.js" type="module" defer></script>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>    
+    <main>
+      <div id="weather-overview">
+        <h2 id="weather-type">Sunny</h2>
+        <p id="location">Leeds</p>
+        <p id="date">Tuesday, 29th Nov '22</p>
+        <p id="time">5.30pm</p>
+        <p id="units">Display C</p>
+        <p>
+          <img src="" id="main-weather-icon" />
+        </p>
+        <form>
+          <input
+            type="text"
+            id="search-input"
+            minlength="3"
+            maxlength="50"
+            pattern="^[a-zA-Z ]+$"
+            placeholder="Search Location..."
+            required
+            />
+          <p id="form-error-msg"></p>
+        </form>
+      </div>
+      <div id="weather-details"></div>
+    </main>
+    <div id="forcast"></div>
+  </body>
+</html>
