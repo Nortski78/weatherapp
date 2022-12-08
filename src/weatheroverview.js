@@ -1,10 +1,10 @@
-import { subscribe } from "./pubsub.js";
+import { publish, subscribe } from "./pubsub.js";
 import { DateTime } from "./libs/luxon.js";
 import { convertKelvinToCelcius, convertKelvinToFahrenheit, convertCelciusToFahrenheit, convertFahrenheitToCelcius, capitaliseWords } from "./utilityfunctions.js";
 
 export function initOverview() {};
 
-subscribe('weatherFetched', (data) => {
+subscribe('weatherfetched', (data) => {
   updateOverview(data);
 });
 
@@ -22,12 +22,13 @@ const date = document.querySelector('#date');
 const time = document.querySelector('#time');
 const temp = document.querySelector('#temp');
 const tempType = document.querySelector('#units'); 
+const mainIcon = document.querySelector('#main-weather-icon');
 
 // Event listeners
 tempType.addEventListener('click', changeUnit);
 
 function updateOverview(data) {
-
+  console.log(data);
   let kelvin = data.main.temp;
 
   weatherType.textContent = capitaliseWords(data.weather[0].description);
@@ -35,6 +36,7 @@ function updateOverview(data) {
   date.textContent = currentDate.toLocaleString(newFormat);
   time.textContent = currentDate.toLocaleString(DateTime.TIME_SIMPLE);
   temp.textContent = `${unit == 'C' ? convertKelvinToCelcius(kelvin) : convertKelvinToFahrenheit(kelvin)} \u00B0${unit}`;
+  mainIcon.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
 }
 
 function changeUnit() {
@@ -42,12 +44,14 @@ function changeUnit() {
     tempType.textContent = 'Display \u00B0C';
     unit = 'F';
     temp.textContent = `${convertCelciusToFahrenheit(temp.textContent.split(' ')[0])} \u00B0${unit}`;
+    publish('tempunitchanged', 'F');
     return
   }
   if(unit === 'F') {
     tempType.textContent = 'Display \u00B0F';
     unit = 'C';
     temp.textContent = `${convertFahrenheitToCelcius(temp.textContent.split(' ')[0])} \u00B0${unit}`;
+    publish('tempunitchanged', 'C');
     return
   }
 }

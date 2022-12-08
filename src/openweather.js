@@ -8,7 +8,7 @@ export async function getWeather(location) {
 
     if(response.ok) {
       const weatherData = await response.json();
-      publish('weatherFetched', weatherData);
+      publish('weatherfetched', weatherData);
     } else {
       console.error('Fetch failed.');
     }
