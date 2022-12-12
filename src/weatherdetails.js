@@ -1,5 +1,5 @@
 import { subscribe } from "./pubsub.js";
-import { convertKelvinToCelcius, convertCelciusToFahrenheit, convertFahrenheitToCelcius } from "./utilityfunctions.js";
+import { convertKelvinToCelcius, convertKelvinToFahrenheit, convertCelciusToFahrenheit, convertFahrenheitToCelcius, mpsToMph, kphToMph, mphToKph } from "./utilityfunctions.js";
 
 export function initWeatherDetails() {};
 
@@ -8,27 +8,49 @@ subscribe('weatherfetched', (data) => {
 });
 subscribe('tempunitchanged', (unit) => changeUnit(unit));
 
+// Variables
+let unit = 'C';
+let windSpeedUnit = 'mph';
+
 // Cache the DOM
 const feelsLike = document.querySelector('#feels-like');
 const humidity = document.querySelector('#humidity');
-const wind = document.querySelector('#wind');
+const rain = document.querySelector('#chance-of-rain');
+const wind = document.querySelector('#wind-speed');
+
+// Events
+wind.addEventListener('click', changeWindSpeedUnit);
 
 function updateWeatherDetails(data) {
-    feelsLike.textContent = `${convertKelvinToCelcius(data.main.feels_like)}`;
-    humidity.textContent = data.main.humidity;
-    wind.textContent = data.wind.speed;
+    if (unit === 'C') feelsLike.textContent = `${convertKelvinToCelcius(data.current.feels_like)} \u00B0${unit}`;
+    else if (unit === 'F') feelsLike.textContent = `${convertKelvinToFahrenheit(data.current.feels_like)} \u00B0${unit}`;
+    humidity.textContent = `${data.current.humidity} %`;
+    rain.textContent = `${data.daily[0].pop * 100} %`;
+    wind.textContent = `${mpsToMph(data.current.wind_speed)} ${windSpeedUnit}`;
 }
 
-function changeUnit(unit) {
-    if(unit === 'F') {
-      //feelsLike.textContent = 'Display \u00B0C';
+function changeUnit(tempUnit) {
+    if(tempUnit === 'F') {
+      unit = 'F';
       feelsLike.textContent = `${convertCelciusToFahrenheit(feelsLike.textContent.split(' ')[0])} \u00B0${unit}`;
       return
     }
-    if(unit === 'C') {
-     // tempType.textContent = 'Display \u00B0F';
-      //unit = 'C';
+    if(tempUnit === 'C') {
+      unit = 'C';
       feelsLike.textContent = `${convertFahrenheitToCelcius(feelsLike.textContent.split(' ')[0])} \u00B0${unit}`;
+      return
+    }
+  }
+
+  function changeWindSpeedUnit() {
+    if(windSpeedUnit === 'mph') {
+      wind.textContent = `${mphToKph(wind.textContent.split(' ')[0])} kph`;
+      windSpeedUnit = 'kph';
+      return
+    }
+    if(windSpeedUnit === 'kph') {
+      wind.textContent = `${kphToMph(wind.textContent.split(' ')[0])} mph`;
+      windSpeedUnit = 'mph';
       return
     }
   }

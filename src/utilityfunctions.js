@@ -30,3 +30,15 @@ export function convertFahrenheitToCelcius(f) {
     
     return (Math.round((fahrenheit - 32) * 0.5556));
 }
+
+export function mpsToMph(windSpeed) {
+    return ((windSpeed * 2.23694).toPrecision(2));
+}
+
+export function mphToKph(mph) {
+    return ((mph * 1.60934).toPrecision(2));
+}
+
+export function kphToMph(kph) {
+    return ((kph / 1.609366).toPrecision(2));
+}

@@ -16,7 +16,7 @@ const currentDate = DateTime.now();
 let newFormat = {...DateTime.DATE_HUGE, weekday: 'long' };
 
 // Cache the DOM
-const weatherType = document.querySelector('#weather-type');
+const weatherType = document.querySelector('#weather-desc');
 const location = document.querySelector('#location');
 const date = document.querySelector('#date');
 const time = document.querySelector('#time');
@@ -28,15 +28,15 @@ const mainIcon = document.querySelector('#main-weather-icon');
 tempType.addEventListener('click', changeUnit);
 
 function updateOverview(data) {
-  console.log(data);
-  let kelvin = data.main.temp;
 
-  weatherType.textContent = capitaliseWords(data.weather[0].description);
+  let kelvin = data.current.temp;
+
+  weatherType.textContent = capitaliseWords(data.current.weather[0].description);
   location.textContent = data.name;
   date.textContent = currentDate.toLocaleString(newFormat);
   time.textContent = currentDate.toLocaleString(DateTime.TIME_SIMPLE);
   temp.textContent = `${unit == 'C' ? convertKelvinToCelcius(kelvin) : convertKelvinToFahrenheit(kelvin)} \u00B0${unit}`;
-  mainIcon.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+  mainIcon.src = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`;
 }
 
 function changeUnit() {
