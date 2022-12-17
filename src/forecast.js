@@ -11,30 +11,45 @@ subscribe('weatherfetched', (data) => {
 subscribe('tempunitchanged', (unit) => changeUnit(unit));
 
 // Cache DOM
+const dailyContainer = document.querySelector('#forecast-daily-container');
+const hourlyContainer = document.querySelector('#forecast-hourly-container');
 const dayCollection = document.querySelectorAll('.forecast-daily');
+const hourCollection = document.querySelectorAll('.forecast-hourly');
+const navBtns = document.querySelector('#hourly-btn-container');
+const dailyBtn = document.querySelector("#daily-btn");
+const hourlyBtn = document.querySelector("#hourly-btn");
+const leftBtn = document.querySelector('#left-btn');
+const rightBtn = document.querySelector('#right-btn');
+const dot1 = document.querySelector('#dot1-btn');
+const dot2 = document.querySelector('#dot2-btn');
+const dot3 = document.querySelector('#dot3-btn');
 
 // Init variables
 let unit = 'C';
+let hourContainer = 1;
 
-const days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-];
+// Event listeners
+dailyBtn.addEventListener('click', displayDailyForecast);
+hourlyBtn.addEventListener('click', displayHourlyForecast);
+leftBtn.addEventListener('click', () => {updateHourlyForecastDisplay('left-btn')});
+rightBtn.addEventListener('click', () => {updateHourlyForecastDisplay('right-btn')});
+dot1.addEventListener('click', () => {updateHourlyForecastDisplay('dot1-btn')});
+dot2.addEventListener('click', () => {updateHourlyForecastDisplay('dot2-btn')});
+dot3.addEventListener('click', () => {updateHourlyForecastDisplay('dot3-btn')});
 
 function updateForecast(data) {
 
-    // Get today's day
+    // Get today's day and hour number
     let dayNumber = DateTime.now().weekday;
+    let dtTime = DateTime.now().toObject();
+    let hour = dtTime.hour;
 
+    // Display daily forecast
     for(let i = 0; i < dayCollection.length; ++i) {
         const day = dayCollection[i].querySelector('.daily-day');
         const dailyHigh = dayCollection[i].querySelector('.daily-high');
         const dailyLow = dayCollection[i].querySelector('.daily-low');
+        const icon = dayCollection[i].querySelector('.daily-icon');
 
 
         switch(dayNumber) {
@@ -71,11 +86,33 @@ function updateForecast(data) {
 
         if (dayNumber == 7) dayNumber = 1;
         else ++dayNumber;
+
+        icon.src = `http://openweathermap.org/img/w/${data.daily[i].weather[0].icon}.png`;
+    }
+
+    // Display hourly forecast
+    for (let i = 0; i < hourCollection.length; ++i) {
+
+        const time = hourCollection[i].querySelector('.hourly-time');
+        const temp = hourCollection[i].querySelector('.hourly-temp');
+        const icon = hourCollection[i].querySelector('.hourly-icon');
+
+        if (hour == 24) hour = 0;
+        time.textContent = `${addOneToHour(hour)}`;
+        ++hour;
+
+        if (unit === 'C') {
+            temp.textContent = `${convertKelvinToCelcius(data.hourly[i].temp)} \u00B0${unit}`;
+        } else if (unit === 'F') {
+            temp.textContent = `${convertKelvinToFahrenheit(data.hourly[i].temp)} \u00B0${unit}`;
+        }
+
+        icon.src = `http://openweathermap.org/img/w/${data.hourly[i].weather[0].icon}.png`;
     }
 }
 
 function changeUnit(tempUnit) {
-    const tempCollection = document.querySelectorAll('.daily-temp');
+    const tempCollection = document.querySelectorAll('.daily-temp, .hourly-temp');
 
     for (let i = 0; i < tempCollection.length; ++i) {
         if( tempUnit === 'F') {
@@ -86,4 +123,109 @@ function changeUnit(tempUnit) {
             tempCollection[i].textContent = `${convertFahrenheitToCelcius(tempCollection[i].textContent.split(' ')[0])} \u00B0${unit}`;
         }
     }
+}
+
+function displayDailyForecast() {
+    dailyContainer.classList.remove('hidden');
+    hourlyContainer.classList.add('hidden');
+    navBtns.classList.add('hidden');
+}
+
+function displayHourlyForecast() {
+    hourlyContainer.classList.remove('hidden');
+    dailyContainer.classList.add('hidden');
+    navBtns.classList.remove('hidden');
+}
+
+function updateHourlyForecastDisplay(btn) {
+    console.log(btn);
+    switch(btn) {
+        case "left-btn":
+            if (hourContainer === 1) return;
+            --hourContainer;
+            displayHourlyContainer(hourContainer);
+            break;
+        case "right-btn":
+            if (hourContainer === 3) return;
+            ++hourContainer;
+            displayHourlyContainer(hourContainer);
+            break;
+        case "dot1-btn":
+            hourContainer = 1;
+            displayHourlyContainer(hourContainer);
+            break;
+        case "dot2-btn":
+            hourContainer = 2;
+            displayHourlyContainer(hourContainer);
+            break;
+        case "dot3-btn":
+            hourContainer = 3;
+            displayHourlyContainer(hourContainer);
+            break;
+    }
+}
+
+function displayHourlyContainer(hour) {
+    const container1 = document.querySelector("#hourly-container-1");
+    const container2 = document.querySelector("#hourly-container-2");
+    const container3 = document.querySelector("#hourly-container-3");
+    
+    switch(hour) {
+        case 1:
+            container1.classList.remove('hidden');
+            container2.classList.add('hidden');
+            container3.classList.add('hidden');
+            dot1.classList.add('fill');
+            dot2.classList.remove('fill');
+            dot3.classList.remove('fill');
+            break;
+        case 2:
+            container1.classList.add('hidden');
+            container2.classList.remove('hidden');
+            container3.classList.add('hidden');
+            dot1.classList.remove('fill');
+            dot2.classList.add('fill');
+            dot3.classList.remove('fill');
+            break;
+        case 3:
+            container1.classList.add('hidden');
+            container2.classList.add('hidden');
+            container3.classList.remove('hidden');
+            dot1.classList.remove('fill');
+            dot2.classList.remove('fill');
+            dot3.classList.add('fill');
+            break;
+    }
+}
+
+function addOneToHour(hour) {
+
+    const hours = [
+        '1 am',
+        '2 am',
+        '3 am',
+        '4 am',
+        '5 am',
+        '6 am',
+        '7 am',
+        '8 am',
+        '9 am',
+        '10 am',
+        '11 am',
+        '12 pm',
+        '1 pm',
+        '2 pm',
+        '3 pm',
+        '4 pm',
+        '5 pm',
+        '6 pm',
+        '7 pm',
+        '8 pm',
+        '9 pm',
+        '10 pm',
+        '11 pm',
+        '12 am'
+    ];
+
+    return hours[hour];
 }

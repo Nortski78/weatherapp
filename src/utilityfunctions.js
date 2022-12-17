@@ -25,9 +25,7 @@ export function convertCelciusToFahrenheit(c) {
 }
 
 export function convertFahrenheitToCelcius(f) {
-    let fahrenheit = Number(f);
-    console.log(Math.round((fahrenheit - 32) * 5556));
-    
+    let fahrenheit = Number(f);    
     return (Math.round((fahrenheit - 32) * 0.5556));
 }
 

@@ -6,7 +6,8 @@ export async function getWeather(location) {
   try {
     const coords = await convertLocationToCoords(location);
     
-    //const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=${key}`);
+    if(coords == undefined) return console.log("Location not found");
+    
     const response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${coords.lat}&lon=${coords.lon}&exclude=minutely,alerts&appid=${key}`);
 
     if(response.ok) {
@@ -25,7 +26,7 @@ async function convertLocationToCoords(location) {
   try {
     let coords = {};
     const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${key}`);
-
+    
     if(response.ok) {
       const weatherData = await response.json();
       coords = {
@@ -37,6 +38,6 @@ async function convertLocationToCoords(location) {
       console.error('Fetch failed.');
     }
   } catch (err) {
-    console.error(err);
+    console.error(`Error in convertLocationToCoords: ${err}`);
   }
 }
