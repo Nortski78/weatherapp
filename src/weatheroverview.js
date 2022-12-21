@@ -1,8 +1,11 @@
 import { publish, subscribe } from "./pubsub.js";
 import { DateTime } from "./libs/luxon.js";
 import { convertKelvinToCelcius, convertKelvinToFahrenheit, convertCelciusToFahrenheit, convertFahrenheitToCelcius, capitaliseWords } from "./utilityfunctions.js";
+import { getWeather } from "./openweather.js";
 
-export function initOverview() {};
+export function initOverview() {
+  getWeather('london');
+};
 
 subscribe('weatherfetched', (data) => {
   updateOverview(data);
@@ -32,7 +35,7 @@ function updateOverview(data) {
   let kelvin = data.current.temp;
 
   weatherType.textContent = capitaliseWords(data.current.weather[0].description);
-  location.textContent = data.name;
+  location.textContent = capitaliseWords(data.location);
   date.textContent = currentDate.toLocaleString(newFormat);
   time.textContent = currentDate.toLocaleString(DateTime.TIME_SIMPLE);
   temp.textContent = `${unit == 'C' ? convertKelvinToCelcius(kelvin) : convertKelvinToFahrenheit(kelvin)} \u00B0${unit}`;
