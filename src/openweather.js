@@ -30,7 +30,7 @@ async function convertLocationToCoords(location) {
   try {
 
     let coords = {};
-    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${key}`);
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${key}`);
     
     if(response.ok) {
       const weatherData = await response.json();
