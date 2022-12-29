@@ -19,18 +19,20 @@
         <div>
           <img src="" id="main-weather-icon" />
         </div>
-        <form>
+        <form autocomplete="off">
           <input
             type="text"
             id="search-input"
             minlength="3"
             maxlength="50"
             pattern="^[a-zA-Z ]+$"
+            autocomplete="off"
             placeholder="Search Location..."
             required
             />
-          <div id="form-error-msg"></div>
+          <div id="search-icon"></div>
         </form>
+        <div id="form-error-msg"></div>
       </div>
       <div id="weather-details-container">
 
@@ -78,8 +80,8 @@
     </main>
     <div id="forcast-container">
       <div id="change-forecast">
-        <div id="daily-btn">Daily</div>
-        <div id="hourly-btn">Hourly</div>
+        <div class=" daily-btn forecast-selected">Daily</div>
+        <div class="hourly-btn">Hourly</div>
         <div id="hourly-btn-container" class="hidden">
           <div id="left-btn">
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="8.02 6 7.41 12" fill="#f5f5f5"><title>arrow_left</title><path d="M15.422 16.594l-1.406 1.406-6-6 6-6 1.406 1.406-4.594 4.594z"></path></svg>

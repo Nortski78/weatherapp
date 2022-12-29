@@ -16,8 +16,8 @@ const hourlyContainer = document.querySelector('#forecast-hourly-container');
 const dayCollection = document.querySelectorAll('.forecast-daily');
 const hourCollection = document.querySelectorAll('.forecast-hourly');
 const navBtns = document.querySelector('#hourly-btn-container');
-const dailyBtn = document.querySelector("#daily-btn");
-const hourlyBtn = document.querySelector("#hourly-btn");
+const dailyBtn = document.querySelector(".daily-btn");
+const hourlyBtn = document.querySelector(".hourly-btn");
 const leftBtn = document.querySelector('#left-btn');
 const rightBtn = document.querySelector('#right-btn');
 const dot1 = document.querySelector('#dot1-btn');
@@ -126,12 +126,16 @@ function changeUnit(tempUnit) {
 }
 
 function displayDailyForecast() {
+    dailyBtn.classList.add('forecast-selected');
+    hourlyBtn.classList.remove('forecast-selected');
     dailyContainer.classList.remove('hidden');
     hourlyContainer.classList.add('hidden');
     navBtns.classList.add('hidden');
 }
 
 function displayHourlyForecast() {
+    dailyBtn.classList.remove('forecast-selected');
+    hourlyBtn.classList.add('forecast-selected');
     hourlyContainer.classList.remove('hidden');
     dailyContainer.classList.add('hidden');
     navBtns.classList.remove('hidden');
@@ -198,34 +202,12 @@ function displayHourlyContainer(hour) {
     }
 }
 
-function addOneToHour(hour) {
+function addOneToHour(hour)
+{
+  hour = (hour + 1) % 24;
 
-    const hours = [
-        '1 am',
-        '2 am',
-        '3 am',
-        '4 am',
-        '5 am',
-        '6 am',
-        '7 am',
-        '8 am',
-        '9 am',
-        '10 am',
-        '11 am',
-        '12 pm',
-        '1 pm',
-        '2 pm',
-        '3 pm',
-        '4 pm',
-        '5 pm',
-        '6 pm',
-        '7 pm',
-        '8 pm',
-        '9 pm',
-        '10 pm',
-        '11 pm',
-        '12 am'
-    ];
+  if(hour < 12)
+    return hour + " am";
 
-    return hours[hour];
+  return (hour - 12) + " pm";
 }

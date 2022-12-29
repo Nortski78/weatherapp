@@ -13,10 +13,12 @@ const weatherData = {};
 const form = document.querySelector('form');
 const searchInput = document.querySelector('#search-input');
 const errorMsg = document.querySelector('#form-error-msg');
+const searchIcon = document.querySelector('#search-icon');
 
 // Event listeners
 searchInput.addEventListener('invalid', fail);
 form.addEventListener('submit', validate);
+searchIcon.addEventListener('click', validate);
 
 // Methods
 function fail(e) {
@@ -32,6 +34,11 @@ function fail(e) {
   if(field.validity.patternMismatch) {
     errorMsg.textContent = '';
     errorMsg.textContent = 'Search can only contain letters';
+    return;
+  }
+  if(field.validity.valueMissing) {
+    errorMsg.textContent = '';
+    errorMsg.textContent = 'Please enter a location';
     return;
   }
 }
